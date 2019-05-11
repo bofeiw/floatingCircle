@@ -13,26 +13,41 @@ function toRem(rem) {
 }
 
 /*
+* util function, extract number from scale string
+* */
+function parseScale(scale) {
+    return Number(scale.match(/[\d|\.]+/));
+}
+
+/*
 * Circle: data representation of circle with position and size
 * circleElement: the circle element already in DOM
 * */
 function Circle(content) {
     // DOM element of the circle
     const HTML = makeCircle(content);
+    HTML.style.transform = 'scale(1)';
 
     // positions of the circle, in rem
     let xCenter = 0;
     let yCenter = 0;
-    let radius = 0;
+    let originalRadius = 0;
 
     // speed of the circle, in rem, per update
     let xSpeed = 0;
     let ySpeed = 0;
 
+    // return the calculated scale, not the scale being set
+    // calculated scale differs from the scale being set
+    // ref: https://stackoverflow.com/a/26893663/9494810
+    function getScale() {
+        return HTML.getBoundingClientRect().width / HTML.offsetWidth;
+    }
+
     // calculate radius only when it is appended to DOM
     HTML.addEventListener('DOMNodeInserted', () => {
         const sideLength = parseRem(HTML.style.width);
-        radius = sideLength / 2;
+        originalRadius = sideLength / 2;
     });
 
     // return if this circle collides to given circle
@@ -49,7 +64,7 @@ function Circle(content) {
 
     // return the collision distance to given circle, in rem
     function collideDistance(circle) {
-        const sumRadius = radius + circle.radius;
+        const sumRadius = originalRadius * getScale() + circle.radius;
         const distance = distanceTo(circle);
         return sumRadius - distance;
     }
@@ -60,7 +75,7 @@ function Circle(content) {
             return content;
         },
         get radius() {
-            return radius;
+            return originalRadius * getScale();
         },
         get xCenter() {
             return xCenter;
@@ -69,10 +84,10 @@ function Circle(content) {
             return yCenter;
         },
         get left() {
-            return xCenter - radius;
+            return xCenter - this.radius;
         },
         get top() {
-            return yCenter - radius;
+            return yCenter - this.radius;
         },
         get HTML() {
             return HTML;
@@ -85,17 +100,22 @@ function Circle(content) {
         },
         set yCenter(number) {
             yCenter = number;
-            HTML.style.top = toRem(this.top);
+            // use yCenter - originalRadius to avoid data inconsistency
+            // when scale is not 1, xCenter is the same
+            HTML.style.top = toRem(yCenter - originalRadius);
         },
         set xCenter(number) {
             xCenter = number;
-            HTML.style.left = toRem(this.left);
+            HTML.style.left = toRem(xCenter - originalRadius);
         },
         set xSpeed(number) {
             xSpeed = number;
         },
         set ySpeed(number) {
             ySpeed = number;
+        },
+        set scale(number) {
+            HTML.style.transform = `scale(${number})`;
         },
 
         collideTo,
@@ -113,7 +133,7 @@ function Circle(content) {
 *
 * You will need to call 'add' to add circles after create manager
 * */
-function CircleManager(containerID, height=20, width=20) {
+function CircleManager(containerID, height = 20, width = 20) {
     // style things
     const wrapper = document.getElementById(containerID);
     wrapper.style.width = toRem(width);
@@ -135,6 +155,9 @@ function CircleManager(containerID, height=20, width=20) {
     const circles = [];
     let circleCount = 0;
     let enableDynamicCollision = true;
+
+    // record the number of updates
+    let updateCount = 0;
 
     // return if a circle has collision
     function hasCollision(circle) {
@@ -182,6 +205,15 @@ function CircleManager(containerID, height=20, width=20) {
         ++circleCount;
 
         const circle = new Circle(content);
+
+        circle.HTML.onmouseover = () => {
+            circle.scale = 1.2
+        };
+
+        circle.HTML.onmouseout = () => {
+            circle.scale = 1
+        };
+
 
         container.appendChild(circle.HTML);
 
@@ -320,6 +352,10 @@ function CircleManager(containerID, height=20, width=20) {
 
     // update all circles, it is self start when manager is created
     (function update() {
+        ++updateCount;
+        // if (updateCount > 200) {
+        //     return
+        // }
         updatePosition();
         updateSpeed();
         resolveCollision();
