@@ -23,6 +23,7 @@ Try here:
 ```html
 <div id="yourID"></div>
 ```
+Note: the `div` will occupy 100% of width and height of its parent, please give it some space! This is essential!
 4. Use `add` to dynamically add data!
 ```html
 <script>
@@ -36,6 +37,7 @@ Try here:
     circleManager.add("Why are you still there !!!!!!!!!", 20000);
 </script>
 ```
+`add` Receive two parameters, the first one is the content of the circle, and the second one is optional, is the delay of the circle to be added, default to 0.
 
 You can also see [this example](examples/helloWorld.html).
 

@@ -75,6 +75,7 @@ function adjustSize(circle) {
         } else {
             // too small, increase min
             minRadius = currentRadius;
+            maxRadius *= 1.01;
         }
         ++iterationCount;
     }

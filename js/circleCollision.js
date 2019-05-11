@@ -29,6 +29,14 @@ function removeElement(element, array) {
     }
 }
 
+function pxToRem(px) {
+    return px / parseInt(getComputedStyle(document.body).getPropertyValue('font-size'));
+}
+
+function parsePx(px) {
+    return Number(px.replace("px", ""));
+}
+
 /*
 * Circle: data representation of circle with position and size
 * circleElement: the circle element already in DOM
@@ -148,28 +156,39 @@ function Circle(content) {
 *
 * You will need to call 'add' to add circles after create manager
 * */
-function CircleManager(containerID, height = 20, width = 20) {
+function CircleManager(containerID) {
     // style things
     const wrapper = document.getElementById(containerID);
-    wrapper.style.width = toRem(width);
-    wrapper.style.height = toRem(height);
+    wrapper.style.width = '100%';
+    wrapper.style.height = '100%';
     wrapper.style.overflow = 'hidden';
     wrapper.style.position = 'relative';
 
     const container = document.createElement('div');
-    container.style.width = toRem(width);
-    container.style.height = toRem(height);
+    container.style.width = '100%';
+    container.style.height = '100%';
     wrapper.appendChild(container);
 
     // gravity is where to gather circles
     // in this case it is central of container
     const gravity = {
-        x: parseRem(container.style.width) / 2,
-        y: parseRem(container.style.height) / 2
+        x: getContainerWidthInRem() / 2,
+        y: getContainerHeightInRem() / 2
     };
     const circles = [];
     let circleCount = 0;
     let enableDynamicCollision = true;
+
+    window.onresize = () => {
+        // adjust circle size
+        for (const circle of circles) {
+            adjustSize(circle.HTML);
+        }
+
+        // adjust gravity position
+        gravity.x = getContainerWidthInRem() / 2;
+        gravity.y = getContainerHeightInRem() / 2;
+    };
 
     // callback when circle is clicked
     // this can be defined by user
@@ -179,6 +198,14 @@ function CircleManager(containerID, height = 20, width = 20) {
 
     // record the number of updates
     let updateCount = 0;
+
+    function getContainerWidthInRem() {
+        return pxToRem(parsePx(getComputedStyle(container).width));
+    }
+
+    function getContainerHeightInRem() {
+        return pxToRem(parsePx(getComputedStyle(container).height));
+    }
 
     // return if a circle has collision
     function hasCollision(circle) {
@@ -249,7 +276,6 @@ function CircleManager(containerID, height = 20, width = 20) {
             );
             onclick(circle.content);
         };
-
         container.appendChild(circle.HTML);
 
         // adjust x position in case of overlap, depends on right or left
