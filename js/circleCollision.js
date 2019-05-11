@@ -17,39 +17,44 @@ function toRem(rem) {
 * circleElement: the circle element already in DOM
 * */
 function Circle(content) {
+    // DOM element of the circle
     const HTML = makeCircle(content);
+
+    // positions of the circle, in rem
     let xCenter = 0;
     let yCenter = 0;
     let radius = 0;
+
+    // speed of the circle, in rem, per update
     let xSpeed = 0;
     let ySpeed = 0;
 
+    // calculate radius only when it is appended to DOM
     HTML.addEventListener('DOMNodeInserted', () => {
         const sideLength = parseRem(HTML.style.width);
         radius = sideLength / 2;
-        // HTML.style.visibility = 'hidden';
     });
 
-    function show() {
-        HTML.style.visibility = 'visible';
-    }
-
+    // return if this circle collides to given circle
     function collideTo(circle) {
         return collideDistance(circle) > 0;
     }
 
+    // return distance to given circle, in rem
     function distanceTo(circle) {
         const xDiff = xCenter - circle.xCenter;
         const yDiff = yCenter - circle.yCenter;
         return Math.sqrt(xDiff * xDiff + yDiff * yDiff);
     }
 
+    // return the collision distance to given circle, in rem
     function collideDistance(circle) {
         const sumRadius = radius + circle.radius;
         const distance = distanceTo(circle);
         return sumRadius - distance;
     }
 
+    // getter, setters, and functions that are exposed to user
     return {
         get content() {
             return content;
@@ -331,17 +336,3 @@ function CircleManager(containerID, height=20, width=20) {
         add,
     }
 }
-
-circleManager = new CircleManager('container');
-circleManager.add("Hfasdgasfb dsaf dasf adsf ad");
-circleManager.add("sad asdf  dsaf ");
-circleManager.add(" dsaf dasf adsf ad adsf a sd asdf asdf as dfas d");
-circleManager.add(" dsaf dasf  asdf asdf as dfas d");
-circleManager.add(" dsaf  as dfas d");
-circleManager.add(" dsaf dasf adsf ad adsf a sd asdf asdf as dfas d");
-circleManager.add(" dsaf dasf ad sd as a asdsf ad adsf a sd asdf asdf as dfas d");
-circleManager.add(" dsaf dasf ad sd as a asdsf ad adsf a sd asdf asdf as dfas d");
-circleManager.add(" dsaf dasf ad sd as a asdsf ad adsf a sd asdf asdf as dfas d");
-circleManager.add(" dsaf dasf ad sd as a asdsf ad adsf a sd asdf asdf as dfas d");
-circleManager.add("  dfas d");
-circleManager.add(" dsaf dasf ", 1000);
