@@ -19,14 +19,12 @@ function adjustSize(circle) {
     const maxIteration = 200;
 
     // following are not customisable
-    console.log(typeof circle);
     if (typeof circle === 'string') {
         // find circle by given circle ID
         // otherwise it need to be a circle
         circle = document.getElementById(circle);
     }
     const text = circle.children[0];
-    console.log(circle.children[0]);
 
     let maxRadius = 10;
 
