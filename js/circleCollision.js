@@ -1,7 +1,13 @@
+/*
+* util function, parse rem string to number
+* */
 function parseRem(rem) {
     return Number(rem.replace("rem", ""));
 }
 
+/*
+* util function, convert rem number to string
+* */
 function toRem(rem) {
     return rem + 'rem';
 }
@@ -93,8 +99,30 @@ function Circle(content) {
     }
 }
 
-function CircleManager(containerID) {
-    const container = document.getElementById(containerID);
+/*
+* CircleManager controls all behaviours of circles
+*
+* containerID: the id of container in DOM, default to 20rem
+* width: width of the container, in rem, default to 20rem
+* height: height of the container, in rem
+*
+* You will need to call 'add' to add circles after create manager
+* */
+function CircleManager(containerID, height=20, width=20) {
+    // style things
+    const wrapper = document.getElementById(containerID);
+    wrapper.style.width = toRem(width);
+    wrapper.style.height = toRem(height);
+    wrapper.style.overflow = 'hidden';
+    wrapper.style.position = 'relative';
+
+    const container = document.createElement('div');
+    container.style.width = toRem(width);
+    container.style.height = toRem(height);
+    wrapper.appendChild(container);
+
+    // gravity is where to gather circles
+    // in this case it is central of container
     const gravity = {
         x: parseRem(container.style.width) / 2,
         y: parseRem(container.style.height) / 2
@@ -103,6 +131,7 @@ function CircleManager(containerID) {
     let circleCount = 0;
     let enableDynamicCollision = true;
 
+    // return if a circle has collision
     function hasCollision(circle) {
         for (const otherCircle of circles) {
             if (circle !== otherCircle && circle.collideTo(otherCircle)) {
@@ -112,6 +141,7 @@ function CircleManager(containerID) {
         return false;
     }
 
+    // return all collision pairs
     function getAllCollision() {
         const collision = [];
         for (const circle of circles) {
@@ -124,6 +154,7 @@ function CircleManager(containerID) {
         return collision;
     }
 
+    // return circles that collide to the given circle
     function getCollision(circle) {
         const collision = [];
         for (const otherCircle of circles) {
@@ -134,12 +165,15 @@ function CircleManager(containerID) {
         return collision;
     }
 
+    // return random y number that is inside container
     function randYInsideContainer() {
         const yMax = gravity.y * 2;
         return Math.random() * yMax;
     }
 
-    function add(content) {
+    // add circle with content, without delay
+    // this is private and should be called by 'add'
+    function addNoDelay(content) {
         ++circleCount;
 
         const circle = new Circle(content);
@@ -177,6 +211,14 @@ function CircleManager(containerID) {
         setTimeout(disableDynamicCollision, 3000);
     }
 
+    // add a circle to container with delay
+    // content: the string displayed inside circle
+    // delay: add to container after delay, in milliseconds, default to 0
+    function add(content, delay = 0) {
+        setTimeout(() => addNoDelay(content), delay);
+    }
+
+    // update all circle positions
     function updatePosition() {
         for (const circle of circles) {
             circle.xCenter += circle.xSpeed;
@@ -184,27 +226,19 @@ function CircleManager(containerID) {
         }
     }
 
+    // update all circle speed
     function updateSpeed() {
         for (const circle of circles) {
             const xToGravity = gravity.x - circle.xCenter;
             const yToGravity = gravity.y - circle.yCenter;
-            const xMinSpeed = xToGravity / 10000;
-            const yMinSpeed = yToGravity / 10000;
 
             // friction
             circle.xSpeed *= 0.98;
             circle.ySpeed *= 0.98;
 
-            circle.xSpeed += xMinSpeed;
-            circle.ySpeed += yMinSpeed;
-
-            // add min gravity speed
-            // if (Math.abs(circle.xSpeed) < Math.abs(xMinSpeed)) {
-            //     circle.xSpeed = xMinSpeed;
-            // }
-            // if (Math.abs(circle.ySpeed) < Math.abs(yMinSpeed)) {
-            //     circle.ySpeed = yMinSpeed;
-            // }
+            // ensure it does not stop moving before reaching gravity
+            circle.xSpeed += xToGravity / 10000;
+            circle.ySpeed += yToGravity / 10000;
         }
     }
 
@@ -279,18 +313,20 @@ function CircleManager(containerID) {
         }
     }
 
+    // update all circles, it is self start when manager is created
     (function update() {
-        // console.log(1);
         updatePosition();
         updateSpeed();
         resolveCollision();
         setTimeout(update, 1)
     })();
 
+    // dynamic collision can be disabled by calling this function
     function disableDynamicCollision() {
         enableDynamicCollision = false;
     }
 
+    // functions that is exposed to user
     return {
         add,
     }
@@ -304,5 +340,8 @@ circleManager.add(" dsaf dasf  asdf asdf as dfas d");
 circleManager.add(" dsaf  as dfas d");
 circleManager.add(" dsaf dasf adsf ad adsf a sd asdf asdf as dfas d");
 circleManager.add(" dsaf dasf ad sd as a asdsf ad adsf a sd asdf asdf as dfas d");
+circleManager.add(" dsaf dasf ad sd as a asdsf ad adsf a sd asdf asdf as dfas d");
+circleManager.add(" dsaf dasf ad sd as a asdsf ad adsf a sd asdf asdf as dfas d");
+circleManager.add(" dsaf dasf ad sd as a asdsf ad adsf a sd asdf asdf as dfas d");
 circleManager.add("  dfas d");
-circleManager.add(" dsaf dasf ");
+circleManager.add(" dsaf dasf ", 1000);
