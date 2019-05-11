@@ -1,0 +1,49 @@
+:root {
+    font-size: 1.125rem;
+}
+
+@media (min-width: 600px) {
+    :root {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 900px) {
+    :root {
+        font-size: 1.75rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    :root {
+        font-size: 2rem;
+    }
+}
+
+* {
+    font-family: "Helvetica Neue", sans-serif;
+}
+
+#circles {
+    background-color: #101010;
+    border-radius: 0.5rem;
+
+    /* center this div */
+    margin: auto;
+}
+
+textarea {
+    width: 80%;
+    min-height: 50%;
+    border-radius: 0.5rem;
+    border: none;
+    resize: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: #ddd;
+}
+
+.circle {
+    background-color: #333;
+    color: white;
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circle Wrap Text</title>
+    <!-- Include the css here -->
+    <link rel="stylesheet" href="css/adjustSize.css">
+    <link rel="stylesheet" href="css/primary.css">
+    <link rel="stylesheet" href="css/splitScreen.css">
+</head>
+<body>
+
+<div class="split left">
+    <div class="centered" id="container">
+        <h2>Demo</h2>
+        <!-- here is the HTML of the circle, assign it an id and add it a circle class -->
+        <div id="circles"></div>
+    </div>
+</div>
+
+<div class="split right">
+    <div class="centered">
+        <h2>Try!</h2>
+        <label>
+            <textarea id="input" maxlength="100"></textarea>
+        </label>
+    </div>
+</div>
+
+
+</body>
+<!-- Include the js here -->
+<script src="js/adjustSize.js"></script>
+<script src="js/anime.min.js"></script>
+<script src="js/circleCollision.js"></script>
+<!-- here goes your js to call adjustSize -->
+<script src="js/input.js"></script>
+</html>
