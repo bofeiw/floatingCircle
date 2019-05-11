@@ -19,6 +19,16 @@ function parseScale(scale) {
     return Number(scale.match(/[\d|\.]+/));
 }
 
+/* util function, remove element from array
+* ref https://stackoverflow.com/questions/5767325/how-do-i-remove-a-particular-element-from-an-array-in-javascript
+* */
+function removeElement(element, array) {
+    const index = array.indexOf(element);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+}
+
 /*
 * Circle: data representation of circle with position and size
 * circleElement: the circle element already in DOM
@@ -161,6 +171,12 @@ function CircleManager(containerID, height = 20, width = 20) {
     let circleCount = 0;
     let enableDynamicCollision = true;
 
+    // callback when circle is clicked
+    // this can be defined by user
+    let onclick = (content) => {
+        console.log("Click:", content);
+    };
+
     // record the number of updates
     let updateCount = 0;
 
@@ -219,6 +235,19 @@ function CircleManager(containerID, height = 20, width = 20) {
             circle.scale = 1
         };
 
+        circle.HTML.onclick = () => {
+            circle.HTML.onmouseover = undefined;
+            circle.HTML.onmouseout = undefined;
+            anime({
+                targets: circle.HTML,
+                scale: 0,
+                duration: 200,
+                easing: 'linear',
+            }).finished.then(() =>
+                removeElement(circle, circles)
+            );
+            onclick(circle.content);
+        };
 
         container.appendChild(circle.HTML);
 
@@ -374,6 +403,10 @@ function CircleManager(containerID, height = 20, width = 20) {
 
     // functions that is exposed to user
     return {
+        set onclick(func) {
+            onclick = func;
+        },
+
         add,
     }
 }
