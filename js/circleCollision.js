@@ -26,7 +26,12 @@ function parseScale(scale) {
 function Circle(content) {
     // DOM element of the circle
     const HTML = makeCircle(content);
+
+    // initial scale is 1
     HTML.style.transform = 'scale(1)';
+
+    // scale animation
+    HTML.style.transition = 'transform 200ms ease';
 
     // positions of the circle, in rem
     let xCenter = 0;
