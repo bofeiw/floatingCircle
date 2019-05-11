@@ -7,7 +7,6 @@ html, body {
 /* Split the screen in half */
 .split {
     height: 100%;
-    width: 50%;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -16,6 +15,7 @@ html, body {
 
 /* Control the left side */
 .left {
+    width: 80%;
     left: 0;
     background-color: black;
     color: white;
@@ -23,6 +23,7 @@ html, body {
 
 /* Control the right side */
 .right {
+    width: 20%;
     right: 0;
     background-color: white;
     color: black;
@@ -37,16 +38,17 @@ html, body {
 
 @media (max-aspect-ratio: 1/1) {
     .split {
-        height: 50%;
         width: 100%;
         left: 0;
     }
 
     .left {
+        height: 70%;
         top: 0;
     }
 
     .right {
-        top: 50%;
+        top: 70%;
+        height: 30%;
     }
 }

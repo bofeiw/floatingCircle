@@ -61,8 +61,10 @@ function Circle(content) {
 
     // calculate radius only when it is appended to DOM
     HTML.addEventListener('DOMNodeInserted', () => {
+        console.log("before radius")
         const sideLength = parseRem(HTML.style.width);
         originalRadius = sideLength / 2;
+        console.log("after radius")
     });
 
     // return if this circle collides to given circle
@@ -171,6 +173,12 @@ function CircleManager(containerID, height = 20, width = 20) {
     let circleCount = 0;
     let enableDynamicCollision = true;
 
+    window.onresize = () => {
+        for (const circle of circles) {
+            adjustSize(circle.HTML);
+        }
+    };
+
     // callback when circle is clicked
     // this can be defined by user
     let onclick = (content) => {
@@ -249,7 +257,6 @@ function CircleManager(containerID, height = 20, width = 20) {
             );
             onclick(circle.content);
         };
-
         container.appendChild(circle.HTML);
 
         // adjust x position in case of overlap, depends on right or left
@@ -388,7 +395,7 @@ function CircleManager(containerID, height = 20, width = 20) {
     // update all circles, it is self start when manager is created
     (function update() {
         ++updateCount;
-        // if (updateCount > 200) {
+        // if (updateCount > 1000) {
         //     return
         // }
         updatePosition();

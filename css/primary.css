@@ -1,20 +1,26 @@
 :root {
-    font-size: 1.125rem;
+    font-size: 1rem;
 }
 
 @media (min-width: 600px) {
     :root {
-        font-size: 1.5rem;
+        font-size: 1rem;
     }
 }
 
 @media (min-width: 900px) {
     :root {
-        font-size: 1.75rem;
+        font-size: 1.4rem;
     }
 }
 
 @media (min-width: 1200px) {
+    :root {
+        font-size: 1.7rem;
+    }
+}
+
+@media (min-width: 1920px) {
     :root {
         font-size: 2rem;
     }
@@ -34,13 +40,53 @@
 
 textarea {
     width: 80%;
-    min-height: 50%;
+    height: 20%;
     border-radius: 0.5rem;
     border: none;
     resize: none;
     padding: 0.5rem;
     font-size: 1rem;
     background-color: #ddd;
+}
+
+/* ref: https://www.w3schools.com/css/tryit.asp?filename=trycss_buttons_animate1 */
+.button {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #f4511e;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 1rem;
+    padding: 0.25rem;
+    width: 200px;
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+.button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button:hover span {
+    padding-right: 25px;
+}
+
+.button:hover span:after {
+    opacity: 1;
+    right: 0;
 }
 
 .circle {
