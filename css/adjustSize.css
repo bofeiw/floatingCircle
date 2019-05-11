@@ -7,11 +7,19 @@
 /* ref: https://codepen.io/skeate/pen/YPyqWd/ */
 .circle {
     position: absolute;
-    background: orangered;
+    background: #accede;
     text-align: center;
     width: 2rem;
     height: 2rem;
     border-radius: 1rem;
+    cursor: pointer;
+    user-select: none;
+
+    /* disable text selection */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
 }
 
 .circle::before {
