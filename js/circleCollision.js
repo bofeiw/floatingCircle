@@ -253,7 +253,6 @@ function CircleManager(containerID) {
         ++circleCount;
 
         const circle = new Circle(content);
-        circle.HTML.style.cursor = "pointer";
 
         circle.HTML.onmouseover = () => {
             circle.scale = 1.4;
