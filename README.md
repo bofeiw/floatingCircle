@@ -4,7 +4,7 @@ It can dynamically add data at anytime.
 Inspired by Apple Music's introduction scene on iOS.
 
 # Demo 
-Try here: 
+Try here: http://bofei.io/floatingCircle/
 
 ![demo.gif](examples/demo.gif)
 
