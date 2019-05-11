@@ -54,6 +54,8 @@ circleManager.onclick = (content) => {
 Your callback should receive one parameter, content, which is the string inside the clicked circle.
 
 # TODO
+- speed up algorithm (a bit slow when adding lots of circles (around 50))
+- add more info to callback (eg. pass some id back)
 
 # Contribution
 You are welcome to contribute!
