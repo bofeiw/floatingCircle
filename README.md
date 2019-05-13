@@ -61,9 +61,14 @@ Your callback should receive one parameter, content, which is the string inside 
 - Other Browsers: to be tested
 
 # TODO
+- speed up algorithm (a bit slow when adding lots of circles (around 50))
+- add more info to callback (eg. pass some id back)
+- hovering on a circle that is surrounded by lots of circles caus-es enlarging animation to be not smooth (around 50)
+- add drag effect
+- add more callbacks (onempty etc.)
 
 # Contribution
-You are welcome to contribute!
+You are welcome to contribute! You can consider to kill some TODOs.
 
 # License
 ["Anti 996" License](LICENSE.txt), do whatever you want if you or your company does not exploit employees
