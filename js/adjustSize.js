@@ -24,6 +24,7 @@ function adjustSize(circle) {
         // otherwise it need to be a circle
         circle = document.getElementById(circle);
     }
+
     const text = circle.children[0];
 
     let maxRadius = 10;
@@ -75,6 +76,10 @@ function adjustSize(circle) {
         } else {
             // too small, increase min
             minRadius = currentRadius;
+
+            // fix bug: in some cases it causes infinite loop using only binary search
+            // because the lower fit might be omitted by halving radius
+            // so slightly increase it will solve the problem.
             maxRadius *= 1.01;
         }
         ++iterationCount;
@@ -98,6 +103,7 @@ function makeCircle(content) {
     text.innerHTML = content;
 
     // when circle is appended to HTML, adjust its size
-    circle.addEventListener('DOMNodeInserted', () => adjustSize(circle));
+    // use higher order function here will cause IE to crash
+    circle.addEventListener('DOMNodeInserted', function () { adjustSize(circle)});
     return circle;
 }

@@ -22,18 +22,44 @@
     user-select: none; /* Standard */
 }
 
-.circle::before {
-    content: '';
-    height: 100%;
-    width: 50%;
-    float: left;
-    shape-outside: polygon(0 0, 100% 0, 60% 4%, 40% 10%, 20% 20%, 10% 28.2%, 5% 34.4%, 0 50%, 5% 65.6%, 10% 71.8%, 20% 80%, 40% 90%, 60% 96%, 100% 100%, 0% 100%);
+/*
+some browsers does not support css used
+if not support, it will try to adjust in another way using css
+its slightly uglier but it works
+if not support but still try to adjust, it might crash
+*/
+.circle > span {
+    /* these magical numbers are to place the span inside the square of the circle*/
+    position: absolute;
+    left: 14.64466094067263%;
+    top: 14.64466094067263%;
+    width: 70.71067811865474%;
+    padding-bottom: 14.64466094067263%;
 }
 
-.circle > span::before {
-    content: '';
-    height: 100%;
-    width: 50%;
-    float: right;
-    shape-outside: polygon(100% 0, 0 0, 40% 4%, 60% 10%, 80% 20%, 90% 28.2%, 95% 34.4%, 100% 50%, 95% 65.6%, 90% 71.8%, 80% 80%, 60% 90%, 40% 96%, 0 100%, 100% 100%);
+@supports (shape-outside: polygon(0 0, 100% 0, 60% 4%, 40% 10%, 20% 20%, 10% 28.2%, 5% 34.4%, 0 50%, 5% 65.6%, 10% 71.8%, 20% 80%, 40% 90%, 60% 96%, 100% 100%, 0% 100%)) {
+    .circle::before {
+        content: '';
+        height: 100%;
+        width: 50%;
+        float: left;
+        shape-outside: polygon(0 0, 100% 0, 60% 4%, 40% 10%, 20% 20%, 10% 28.2%, 5% 34.4%, 0 50%, 5% 65.6%, 10% 71.8%, 20% 80%, 40% 90%, 60% 96%, 100% 100%, 0% 100%);
+    }
+
+    .circle > span::before {
+        content: '';
+        height: 100%;
+        width: 50%;
+        float: right;
+        shape-outside: polygon(100% 0, 0 0, 40% 4%, 60% 10%, 80% 20%, 90% 28.2%, 95% 34.4%, 100% 50%, 95% 65.6%, 90% 71.8%, 80% 80%, 60% 90%, 40% 96%, 0 100%, 100% 100%);
+    }
+
+    /* override default css for not support */
+    .circle > span {
+        position: relative;
+        left: 0;
+        top: 0;
+        width: 0;
+        padding-bottom: 0;
+    }
 }
