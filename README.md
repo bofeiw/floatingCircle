@@ -53,6 +53,13 @@ circleManager.onclick = (content) => {
 ```
 Your callback should receive one parameter, content, which is the string inside the clicked circle.
 
+# Browser support
+- Apple Safari: supported
+- Google Chrome: supported
+- Microsoft Edge: supported
+- Microsoft IE: not supported. If you want use it in IE, you need to use [Bable](https://babeljs.io) to translate all js files into compatible versions (i.e. string literals are not supported in IE).
+- Other Browsers: to be tested
+
 # TODO
 
 # Contribution
