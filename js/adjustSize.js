@@ -28,7 +28,7 @@ function adjustSize(circle) {
     const text = circle.children[0];
 
     let maxRadius = 10;
-console.log(1)
+
     // find a rough max bound for maximum radius that fit the text
     while (true) {
         // update DOM size
