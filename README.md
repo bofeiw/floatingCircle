@@ -66,6 +66,7 @@ Your callback should receive one parameter, content, which is the string inside 
 - hovering on a circle that is surrounded by lots of circles caus-es enlarging animation to be not smooth (around 50)
 - add drag effect
 - add more callbacks (onempty etc.)
+- add radius as a percentage to measure the percentage of each two circles to displace in static collision
 
 # Contribution
 You are welcome to contribute! You can consider to kill some TODOs.
