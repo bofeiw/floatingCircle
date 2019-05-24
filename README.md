@@ -67,6 +67,7 @@ Your callback should receive one parameter, content, which is the string inside 
 - add drag effect
 - add more callbacks (onempty etc.)
 - add radius as a percentage to measure the percentage of each two circles to displace in static collision
+- two circles might not fit inside container
 
 # Contribution
 You are welcome to contribute! You can consider to kill some TODOs.
