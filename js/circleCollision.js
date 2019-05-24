@@ -60,6 +60,11 @@ function Circle(content) {
     let xSpeed = 0;
     let ySpeed = 0;
 
+    // for drag, if set to false, then the position of this circle
+    // would not change. This is only for drag use, and you should
+    // make sure there is at most one circle is set to false
+    let movable = true;
+
     // return the calculated scale, not the scale being set
     // calculated scale differs from the scale being set
     // ref: https://stackoverflow.com/a/26893663/9494810
@@ -121,6 +126,9 @@ function Circle(content) {
         get ySpeed() {
             return ySpeed;
         },
+        get movable() {
+            return movable;
+        },
         set yCenter(number) {
             yCenter = number;
             // use yCenter - originalRadius to avoid data inconsistency
@@ -139,6 +147,9 @@ function Circle(content) {
         },
         set scale(number) {
             HTML.style.transform = `scale(${number})`;
+        },
+        set movable(isMovable) {
+            movable = isMovable;
         },
 
         collideTo,
@@ -254,8 +265,15 @@ function CircleManager(containerID) {
 
         const circle = new Circle(content);
 
+        // record if the circle is dragged
+        let moved = false;
+
+        // distance of mouse down relative to circle center
+        let relativeX;
+        let relativeY;
+
         circle.HTML.onmouseover = () => {
-            circle.scale = 1.4;
+            circle.scale = 1.5;
         };
 
         circle.HTML.onmouseout = () => {
@@ -263,6 +281,10 @@ function CircleManager(containerID) {
         };
 
         circle.HTML.onclick = () => {
+            if (moved) {
+                // if circle is moved, it cannot be clicked
+                return;
+            }
             circle.HTML.onmouseover = undefined;
             circle.HTML.onmouseout = undefined;
             anime({
@@ -275,6 +297,33 @@ function CircleManager(containerID) {
             );
             onclick(circle.content);
         };
+
+        const circleMouseMove = (event) => {
+            const mouseX = pxToRem(event.clientX);
+            const mouseY = pxToRem(event.clientY);
+            circle.xCenter = mouseX - relativeX;
+            circle.yCenter = mouseY - relativeY;
+            moved = true;
+        };
+
+        circle.HTML.onmousedown = (event) => {
+            circle.movable = false;
+            const mouseX = pxToRem(event.clientX);
+            const mouseY = pxToRem(event.clientY);
+            relativeX = mouseX - circle.xCenter;
+            relativeY = mouseY - circle.yCenter;
+            circle.scale = 1.25;
+            container.addEventListener("mousemove", circleMouseMove);
+        };
+        circle.HTML.onmouseup = () => {
+            container.removeEventListener("mousemove", circleMouseMove);
+            circle.movable = true;
+            circle.scale = 1.4;
+            setTimeout(() => {
+                moved = false;
+            }, 10);
+        };
+
         container.appendChild(circle.HTML);
 
         // adjust x position in case of overlap, depends on right or left
@@ -318,8 +367,10 @@ function CircleManager(containerID) {
     // update all circle positions
     function updatePosition() {
         for (const circle of circles) {
-            circle.xCenter += circle.xSpeed;
-            circle.yCenter += circle.ySpeed;
+            if (circle.movable) {
+                circle.xCenter += circle.xSpeed;
+                circle.yCenter += circle.ySpeed;
+            }
         }
     }
 
@@ -356,13 +407,23 @@ function CircleManager(containerID) {
                     // Calculate displacement required
                     const distanceOverlap = -0.5 * circle.collideDistance(otherCircle);
 
-                    // Displace Current Ball away from collision
-                    circle.xCenter -= distanceOverlap * (circle.xCenter - otherCircle.xCenter) / distance;
-                    circle.yCenter -= distanceOverlap * (circle.yCenter - otherCircle.yCenter) / distance;
+                    if (!circle.movable) {
+                        // Displace Target Ball away from collision fully from unmovable circle
+                        otherCircle.xCenter += 2 * distanceOverlap * (circle.xCenter - otherCircle.xCenter) / distance;
+                        otherCircle.yCenter += 2 * distanceOverlap * (circle.yCenter - otherCircle.yCenter) / distance;
+                    } else if (!otherCircle.movable) {
+                        // Displace Current Ball away from collision fully from unmovable target
+                        circle.xCenter -= 2 * distanceOverlap * (circle.xCenter - otherCircle.xCenter) / distance;
+                        circle.yCenter -= 2 * distanceOverlap * (circle.yCenter - otherCircle.yCenter) / distance;
+                    } else {
+                        // Displace Current Ball away from collision
+                        circle.xCenter -= distanceOverlap * (circle.xCenter - otherCircle.xCenter) / distance;
+                        circle.yCenter -= distanceOverlap * (circle.yCenter - otherCircle.yCenter) / distance;
 
-                    // Displace Target Ball away from collision
-                    otherCircle.xCenter += distanceOverlap * (circle.xCenter - otherCircle.xCenter) / distance;
-                    otherCircle.yCenter += distanceOverlap * (circle.yCenter - otherCircle.yCenter) / distance;
+                        // Displace Target Ball away from collision
+                        otherCircle.xCenter += distanceOverlap * (circle.xCenter - otherCircle.xCenter) / distance;
+                        otherCircle.yCenter += distanceOverlap * (circle.yCenter - otherCircle.yCenter) / distance;
+                    }
                 }
             }
         }

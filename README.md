@@ -66,9 +66,16 @@ Your callback should receive one parameter, content, which is the string inside 
 - hovering on a circle that is surrounded by lots of circles caus-es enlarging animation to be not smooth (around 50)
 - add drag effect
 - add more callbacks (onempty etc.)
+- add radius as a percentage to measure the percentage of each two circles to displace in static collision
+- two circles might not fit inside container
 
 # Contribution
 You are welcome to contribute! You can consider to kill some TODOs.
+
+# Related projects
+Here are some of the projects I tried and are related to this project:
+- [Circle collision detection with mouseover effect using D3.js](https://bl.ocks.org/mbostock/3231298)
+- [Circle collision with resizeable circle and collapsible content using D3.js](https://github.com/trongthanh/techstack)
 
 # License
 ["Anti 996" License](LICENSE.txt), do whatever you want if you or your company does not exploit employees
