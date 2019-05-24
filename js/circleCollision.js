@@ -306,7 +306,7 @@ function CircleManager(containerID) {
             moved = true;
         };
 
-        circle.HTML.onmousedown = (event) => {
+        function mouseOrTouchDown(event) {
             circle.movable = false;
             const mouseX = pxToRem(event.clientX);
             const mouseY = pxToRem(event.clientY);
@@ -314,15 +314,21 @@ function CircleManager(containerID) {
             relativeY = mouseY - circle.yCenter;
             circle.scale = 1.25;
             container.addEventListener("mousemove", circleMouseMove);
-        };
-        circle.HTML.onmouseup = () => {
+            container.addEventListener("touchstart", circleMouseMove);
+        }
+
+        function mouseOrTouchUp() {
             container.removeEventListener("mousemove", circleMouseMove);
+            container.removeEventListener("touchmove", circleMouseMove);
             circle.movable = true;
             circle.scale = 1.4;
             setTimeout(() => {
                 moved = false;
             }, 10);
-        };
+        }
+
+        circle.HTML.onmousedown = mouseOrTouchDown;
+        circle.HTML.onmouseup = mouseOrTouchUp;
 
         container.appendChild(circle.HTML);
 
